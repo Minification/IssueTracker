@@ -1,9 +1,13 @@
 package issuetracker.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Project {
+@Data
+public class Project implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -11,8 +15,6 @@ public class Project {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "OWNER_ID")
-    private Account owner;
+    private Long ownerId;
 
 }

@@ -1,9 +1,13 @@
 package issuetracker.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Issue {
+@Data
+public class Issue implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,31 +17,8 @@ public class Issue {
 
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "OWNER_ID")
-    private Account owner;
+    private Long ownerId;
 
-    @ManyToOne
-    @JoinColumn(name = "PROJECT_ID")
-    private Project project;
+    private Long projectId;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Account getOwner() {
-        return owner;
-    }
-
-    public Project getProject() {
-        return project;
-    }
 }
