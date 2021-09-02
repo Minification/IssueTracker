@@ -36,7 +36,7 @@ public class Account implements UserDetails, Serializable {
     @ElementCollection(targetClass = Role.class)
     private final Set<Role> authorities = new HashSet<>();
 
-    private boolean enabled;
+    private boolean enabled = true;
 
     public Account() {
 
@@ -45,7 +45,6 @@ public class Account implements UserDetails, Serializable {
     public Account(final String email, final String password) {
         this.email = email;
         this.password = password;
-        this.enabled = true;
     }
 
     @Override

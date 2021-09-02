@@ -8,6 +8,7 @@ import issuetracker.mappers.AccountViewMapper;
 import issuetracker.security.JwtUtil;
 import issuetracker.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,19 +38,24 @@ public class AuthenticationController {
 
     private final UserService userService;
 
-    @PostMapping("/login")
+    private final Logger logger;
+
+    @PostMapping("login")
     public ResponseEntity<AccountView> login(@RequestBody @Valid LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
+            logger.info("Authentication created");
             Account account = (Account) authentication.getPrincipal();
+            logger.info("Principal gotten");
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateAccessToken(account))
                     .body(accountViewMapper.toAccountView(account));
             //TODO: Check why all fields are null in returned account view
         } catch (BadCredentialsException e) {
+            logger.info("Bad credentials {} with {}", e.getMessage(), e.getStackTrace());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
