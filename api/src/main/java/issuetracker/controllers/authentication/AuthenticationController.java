@@ -46,16 +46,12 @@ public class AuthenticationController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
-            logger.info("Authentication created");
             Account account = (Account) authentication.getPrincipal();
-            logger.info("Principal gotten");
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateAccessToken(account))
                     .body(accountViewMapper.toAccountView(account));
-            //TODO: Check why all fields are null in returned account view
         } catch (BadCredentialsException e) {
-            logger.info("Bad credentials {} with {}", e.getMessage(), e.getStackTrace());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
