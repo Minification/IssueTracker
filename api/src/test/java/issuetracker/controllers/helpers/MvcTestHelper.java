@@ -1,8 +1,10 @@
-package issuetracker.controllers;
+package issuetracker.controllers.helpers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import issuetracker.domain.Account;
 import issuetracker.persistence.AccountRepository;
+import issuetracker.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,9 +25,14 @@ public class MvcTestHelper {
     private MockMvc mvc;
 
     @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
     private AccountRepository accountRepository;
 
     private Account account;
+
+    private String accessToken;
 
     @Transactional
     public void reset() {
@@ -43,6 +50,7 @@ public class MvcTestHelper {
         account.setIssueIds(List.of());
         account.setProjectIds(List.of());
         this.account = accountRepository.save(account);
+        accessToken = jwtUtil.generateAccessToken(account);
     }
 
     public MockMvc getMvc() {
@@ -58,7 +66,20 @@ public class MvcTestHelper {
         }
     }
 
+    public <T> T asObject(final Class<T> type, final String jsonString) {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonString, type);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Account getAccount() {
         return account;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 }

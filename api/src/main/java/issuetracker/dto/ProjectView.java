@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ProjectView {
 
-    private String projectName;
+    private String name;
 
 }

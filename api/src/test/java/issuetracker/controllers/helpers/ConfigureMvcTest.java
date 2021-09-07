@@ -1,12 +1,6 @@
-package issuetracker.controllers;
+package issuetracker.controllers.helpers;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.BootstrapWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

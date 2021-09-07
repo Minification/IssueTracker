@@ -9,6 +9,7 @@ import issuetracker.security.JwtUtil;
 import issuetracker.security.SplitBearer;
 import issuetracker.services.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,8 @@ public class ProjectController {
 
     private final JwtUtil jwtUtil;
 
+    private final Logger logger;
+
     @GetMapping("/{project}")
     public EntityModel<Project> one(final @PathVariable(name = "project") String projectName) {
         //TODO: Use {account} as well
@@ -39,6 +42,7 @@ public class ProjectController {
             final @RequestHeader("Authorization") String authorization) {
         String token = SplitBearer.extractTokenFromAuthorizationHeader(authorization);
         ProjectView projectView = projectService.create(request, Long.parseLong(jwtUtil.getUserId(token)));
+        logger.info("Projectview is {}", projectView);
         return ResponseEntity.ok(projectView);
     }
 

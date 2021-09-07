@@ -33,9 +33,6 @@ public class Account implements UserDetails, Serializable {
     @ElementCollection(targetClass = Long.class)
     private List<Long> issueIds;
 
-    @ElementCollection(targetClass = Role.class)
-    private final Set<Role> authorities = new HashSet<>();
-
     private boolean enabled = true;
 
     public Account() {
@@ -67,4 +64,8 @@ public class Account implements UserDetails, Serializable {
         return enabled;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
 }

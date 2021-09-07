@@ -1,4 +1,4 @@
-package issuetracker.controllers;
+package issuetracker.controllers.helpers;
 
 import org.junit.jupiter.api.extension.*;
 import org.springframework.context.ApplicationContext;
