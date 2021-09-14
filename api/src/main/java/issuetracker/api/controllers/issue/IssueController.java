@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/{account}/{project}/issues")
+@RequestMapping("/{account}/projects/{project}/issues")
 @RequiredArgsConstructor
 public class IssueController {
 
@@ -62,7 +63,7 @@ public class IssueController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createIssue(final @RequestBody CreateIssueRequest request,
+    public ResponseEntity<?> createIssue(final @RequestBody @Valid CreateIssueRequest request,
                                          final @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
                                          final @PathVariable("") String projectName) {
         final String token = TokenParser.extractTokenFromAuthorizationHeader(authorization);

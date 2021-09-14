@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Data
-public class Account implements UserDetails, Serializable {
+public class Account implements UserDetails, Serializable, Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

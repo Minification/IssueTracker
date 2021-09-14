@@ -15,12 +15,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/{account}/projects")
 @RequiredArgsConstructor
 public class ProjectController {
-
-    private final ProjectRepository projectRepository;
 
     private final ProjectModelAssembler projectModelAssembler;
 
@@ -31,19 +31,30 @@ public class ProjectController {
     private final Logger logger;
 
     @GetMapping("/{project}")
-    public EntityModel<Project> one(final @PathVariable(name = "project") String projectName) {
-        //TODO: Use {account} as well
-        final Project project = projectRepository.getByName(projectName).orElseThrow(ProjectNotFoundException::new);
-        return projectModelAssembler.toModel(project);
+    public ResponseEntity<ProjectView> one(
+            final @PathVariable(name = "project") String projectName,
+            final @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+        final String token = TokenParser.extractTokenFromAuthorizationHeader(authorization);
+        ProjectView projectView = projectService.findByName(projectName, Long.parseLong(token));
+        return ResponseEntity.ok(projectView);
     }
 
     @PostMapping()
     public ResponseEntity<ProjectView> createProject(
-            final @RequestBody CreateProjectRequest request,
+            final @RequestBody @Valid CreateProjectRequest request,
             final @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         final String token = TokenParser.extractTokenFromAuthorizationHeader(authorization);
         final ProjectView projectView = projectService.create(request, Long.parseLong(jwtUtil.getUserId(token)));
         return ResponseEntity.ok(projectView);
+    }
+
+    @DeleteMapping("/{project}")
+    public ResponseEntity<?> createProject(
+            final @PathVariable(name = "project") String projectName,
+            final @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+        final String token = TokenParser.extractTokenFromAuthorizationHeader(authorization);
+        projectService.delete(projectName, Long.parseLong(jwtUtil.getUserId(token)));
+        return ResponseEntity.ok().build();
     }
 
 }

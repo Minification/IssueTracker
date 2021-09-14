@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Entity
 @Data
-public class Project implements Serializable {
+public class Project implements Serializable, Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

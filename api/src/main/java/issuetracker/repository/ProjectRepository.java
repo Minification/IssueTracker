@@ -9,4 +9,6 @@ public interface ProjectRepository  extends JpaRepository<Project, Long> {
 
     Optional<Project> getByName(String name);
 
+    Optional<Project> getByNameAndOwner(String name, long owner);
+
 }
