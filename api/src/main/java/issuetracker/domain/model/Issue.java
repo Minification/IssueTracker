@@ -11,14 +11,19 @@ public class Issue implements Serializable, Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "issue_id")
     private Long id;
 
     private String title;
 
     private String content;
 
-    private Long ownerId;
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account owner;
 
-    private Long projectId;
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
 }

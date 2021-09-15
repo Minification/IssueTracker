@@ -1,6 +1,7 @@
 package issuetracker.api.controllers.issue;
 
 import issuetracker.api.assemblers.IssueModelAssembler;
+import issuetracker.domain.dto.IssueView;
 import issuetracker.domain.model.Issue;
 import issuetracker.domain.dto.CreateIssueRequest;
 import issuetracker.repository.IssueRepository;
@@ -63,9 +64,9 @@ public class IssueController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createIssue(final @RequestBody @Valid CreateIssueRequest request,
-                                         final @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
-                                         final @PathVariable("") String projectName) {
+    public ResponseEntity<IssueView> createIssue(final @RequestBody @Valid CreateIssueRequest request,
+                                                 final @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+                                                 final @PathVariable("") String projectName) {
         final String token = TokenParser.extractTokenFromAuthorizationHeader(authorization);
         final long userId = Long.parseLong(jwtUtil.getUserId(token));
         return ResponseEntity.ok(issueService.create(request, userId, projectName));

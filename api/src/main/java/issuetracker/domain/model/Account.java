@@ -1,6 +1,7 @@
 package issuetracker.domain.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,10 +12,12 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Account implements UserDetails, Serializable, Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "account_id")
     private Long id;
 
     @Column(unique = true)
@@ -25,16 +28,22 @@ public class Account implements UserDetails, Serializable, Identifiable {
 
     private String password;
 
-    @ElementCollection(targetClass = Long.class)
-    private List<Long> projectIds;
+    @OneToMany(mappedBy="owner")
+    private List<Project> projects;
 
-    @ElementCollection(targetClass = Long.class)
-    private List<Long> issueIds;
+    @OneToMany(mappedBy="owner")
+    private List<Issue> issues;
 
     private boolean enabled = true;
 
-    public Account() {
+    public void addProject(final Project project) {
+        projects.add(project);
+        project.setOwner(this);
+    }
 
+    public void addIssue(final Issue issue) {
+        issues.add(issue);
+        issue.setOwner(this);
     }
 
     public Account(final String email, final String password) {
